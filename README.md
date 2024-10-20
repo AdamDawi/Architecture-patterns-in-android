@@ -13,12 +13,12 @@ This repository demonstrates several mobile architecture patterns implemented in
 
 ![MVVM](https://github.com/user-attachments/assets/2f3bec49-2749-488f-9b4d-ab16d453b0b3 )
 
-**MVVM**
+### MVVM
 - **Model** handles the data and business logic.
 - **View** displays the states and reacts to changes in the ViewModel.
 - **ViewModel** serves as a bridge between the Model and View, managing UI-related data and handling user inputs.
 
-#### Features:
+### Features:
 - Using ViewModel fuctions directly in view: ```viewModel.fetchData()```
 - Multiple states in ViewModel describes the UI.
 
@@ -26,7 +26,7 @@ This repository demonstrates several mobile architecture patterns implemented in
 
 ![MVI](https://github.com/user-attachments/assets/27155167-d5f0-471b-849d-2529bc5e8007)
 
-**MVI**
+### MVI
 - **Model** represents the state of the app.
 - **View** displays the state and sends user intents to the ViewModel.
 - **Intent** describes actions that the user can take, which result in state changes.
