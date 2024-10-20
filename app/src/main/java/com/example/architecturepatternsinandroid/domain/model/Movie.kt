@@ -1,4 +1,4 @@
-package com.example.architecturepatternsinandroid.domain
+package com.example.architecturepatternsinandroid.domain.model
 
 data class Movie(
     val id: Int,

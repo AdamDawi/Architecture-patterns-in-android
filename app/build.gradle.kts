@@ -58,11 +58,12 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     //dagger hilt
     implementation(libs.hilt.android.v250)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.hilt.work)
     ksp(libs.androidx.hilt.compiler)
+    implementation("androidx.work:work-runtime-ktx:2.7.1")
 }
