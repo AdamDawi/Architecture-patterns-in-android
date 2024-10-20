@@ -46,6 +46,7 @@ fun MainScreen(
                     .height(64.dp)
                     .fillMaxWidth(),
                 onClick = {
+                    navController.navigate(Screen.Mvvm.route)
                 }
             ) {
                 Text(

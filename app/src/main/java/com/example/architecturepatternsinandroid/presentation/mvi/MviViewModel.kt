@@ -1,5 +1,6 @@
 package com.example.architecturepatternsinandroid.presentation.mvi
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.architecturepatternsinandroid.domain.repository.MovieRepository
@@ -12,23 +13,27 @@ import javax.inject.Inject
 @HiltViewModel
 class MviViewModel @Inject constructor(
     private val movieRepository: MovieRepository
-): ViewModel() {
+) : ViewModel() {
     private val _state = MutableStateFlow(MovieViewState())
     val state: StateFlow<MovieViewState> = _state
 
-    fun handleIntent(intent: MovieIntent){
-        when(intent){
+    //or name it like: onEvent or onAction
+    fun handleIntent(intent: MovieIntent) {
+        when (intent) {
             is MovieIntent.FetchMovies -> fetchMovies()
+            else -> Unit
         }
     }
 
-    private fun fetchMovies(){
-        viewModelScope.launch{
+    private fun fetchMovies() {
+        viewModelScope.launch {
+            //Important that you copy value of state
             _state.value = _state.value.copy(loading = true)
             try {
                 val movies = movieRepository.getMovies()
                 _state.value = _state.value.copy(loading = false, movies = movies)
-            }catch (e: Exception){
+            } catch (e: Exception) {
+                Log.e("MviViewModel", "Error fetching movies: ${e.message}")
                 _state.value = _state.value.copy(loading = false, error = e.message)
             }
         }

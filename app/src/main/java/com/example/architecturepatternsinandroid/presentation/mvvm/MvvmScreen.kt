@@ -1,11 +1,10 @@
-package com.example.architecturepatternsinandroid.presentation.mvi
+package com.example.architecturepatternsinandroid.presentation.mvvm
 
 import androidx.compose.foundation.layout.Arrangement.Center
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,56 +13,47 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.architecturepatternsinandroid.domain.model.Movie
 import com.example.architecturepatternsinandroid.presentation.components.CustomTopAppBar
 import com.example.architecturepatternsinandroid.presentation.components.MoviesList
-import com.example.architecturepatternsinandroid.presentation.theme.ArchitecturePatternsInAndroidTheme
 
 @Composable
-fun MviScreen(
-    viewModel: MviViewModel = hiltViewModel(),
+fun MvvmScreen(
+    viewModel: MvvmViewModel = hiltViewModel(),
     goBack: () -> Unit
 ) {
-    val state = viewModel.state.collectAsState()
     LaunchedEffect(Unit) {
-        viewModel.handleIntent(MovieIntent.FetchMovies)
+        viewModel.fetchMovies()
     }
-    MviScreenContent(
-        onAction = { action ->
-            when (action) {
-                is MovieIntent.GoBack -> {
-                    goBack()
-                }
-
-                else -> Unit
-            }
-            viewModel.handleIntent(action)
-        },
-        state = state.value
+    MvvmScreenContent(
+        movies = viewModel.movies.collectAsState().value,
+        error = viewModel.error.collectAsState().value,
+        isLoading = viewModel.isLoading.collectAsState().value,
+        goBack = goBack
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MviScreenContent(
-    onAction: (MovieIntent) -> Unit,
-    state: MovieViewState
+fun MvvmScreenContent(
+    movies: List<Movie>,
+    error: String?,
+    isLoading: Boolean,
+    goBack: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
         topBar = {
             CustomTopAppBar(
-                title = "MVI",
-                onAction = { onAction(MovieIntent.GoBack) }
+                title = "MVVM",
+                onAction = goBack
             )
         },
         containerColor = Color.White
     ) { scaffoldPadding ->
         when {
-            state.loading -> {
+            isLoading -> {
                 // Display a loading indicator
                 Column(
                     modifier = Modifier
@@ -76,7 +66,7 @@ fun MviScreenContent(
                 }
             }
 
-            state.error != null -> {
+            error != null -> {
                 // Display an error message
                 Column(
                     modifier = Modifier
@@ -86,7 +76,7 @@ fun MviScreenContent(
                     verticalArrangement = Center
                 ) {
 
-                    Text(text = "Error: ${state.error}", color = Color.Red)
+                    Text(text = "Error: $error", color = Color.Red)
                 }
             }
 
@@ -94,24 +84,9 @@ fun MviScreenContent(
                 // Display the list of movies
                 MoviesList(
                     modifier = Modifier.padding(scaffoldPadding),
-                    movies = state.movies
+                    movies = movies
                 )
             }
         }
-    }
-}
-
-
-@Preview
-@Composable
-private fun MoviesListPreview() {
-    ArchitecturePatternsInAndroidTheme {
-        MoviesList(
-            movies = listOf(
-                Movie(1, "Spiderman", "2020"),
-                Movie(2, "Captain America", "2013"),
-                Movie(3, "Black Panther", "2021"),
-            )
-        )
     }
 }
