@@ -6,8 +6,8 @@ This repository demonstrates several mobile architecture patterns implemented in
 
 - **MVVM (Model-View-ViewModel)**: Separates concerns into Model, View, and ViewModel layers.
 - **MVI (Model-View-Intent)**: Utilizes a unidirectional data flow with distinct intents and states.
-- **MVC (Model-View-Controller)**: Classic pattern that divides logic into controller, view, and model components. *(Coming soon)*
-- **MVP (Model-View-Presenter)**: A more structured variant of MVC where the presenter handles the business logic. *(Coming soon)*
+- **MVC (Model-View-Controller)**: Classic pattern that divides logic into controller, view, and model components. *(Not supported in jetpack compose)*
+- **MVP (Model-View-Presenter)**: A more structured variant of MVC where the presenter handles the business logic. *(Not supported in jetpack compose)*
 
 ## MVVM (Model-View-ViewModel)
 
@@ -50,7 +50,25 @@ data class MainViewState(
 ```
 
 ## MVC (Model-View-Controller)
-*In progress*
+
+![image](https://github.com/user-attachments/assets/6d362156-da6a-491e-8801-dd9560da6f41)
+
+### MVC
+- **Model:** Holds the app's data, manages retrieval, storage, and business logic, with no knowledge of the UI.
+- **View:** Represents the UI, displaying data and capturing user interactions without handling complex logic.
+- **Controller:** Serves as the intermediary between the Model and View, handling user input, processing data, and updating the View manually.
+  
+### Features:
+- Jetpack Compose is not well-suited for this pattern due to its declarative nature, which blurs the boundaries between view and logic.
+- Does not automate data synchronization between UI and Model (doesn't use states):
+```kotlin
+private fun updateUI(weather: Weather) {
+        // Update UI elements with data
+        textViewTemperature.text = weather.temperature.toString()
+        textViewDescription.text = weather.description
+    }
+```
+
 
 ## MVP (Model-View-Presenter)
 *In progress*
