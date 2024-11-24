@@ -5,18 +5,20 @@ This repository demonstrates several mobile architecture patterns implemented in
 ## Architectures Overview
 
 - **MVVM (Model-View-ViewModel)**: Separates concerns into Model, View, and ViewModel layers.
-- **MVI (Model-View-Intent)**: Utilizes a unidirectional data flow with distinct intents and states.
-- **MVC (Model-View-Controller)**: Classic pattern that divides logic into controller, view, and model components. *(Not supported in jetpack compose)*
-- **MVP (Model-View-Presenter)**: A more structured variant of MVC where the presenter handles the business logic. *(Not supported in jetpack compose)*
+- **MVI (Model-View-Intent)**: Implements a unidirectional data flow, where user intents are transformed into view states.
+- **MVC (Model-View-Controller)**: Classic pattern where UI and data-access mechanism(Model) are tightly coupled. *(Not supported in jetpack compose)*
+- **MVP (Model-View-Presenter)**: A more structured variant of MVC where presenter class manages one View at a time. *(Not supported in jetpack compose)*
+
+![image](https://github.com/user-attachments/assets/83f4455e-a34b-459a-92bf-a4f250ca5129)
 
 ## MVVM (Model-View-ViewModel)
 
 ![MVVM](https://github.com/user-attachments/assets/2f3bec49-2749-488f-9b4d-ab16d453b0b3 )
 
 ### MVVM
-- **Model** handles the data and business logic.
-- **View** displays the states and reacts to changes in the ViewModel.
-- **ViewModel** serves as a bridge between the Model and View, managing UI-related data and handling user inputs.
+- **Model:** This layer is responsible for the abstraction of the data sources. Model and ViewModel work together to get and save the data.
+- **View:** The purpose of this layer is to inform the ViewModel about the user’s action. This layer observes the ViewModel and does not contain any kind of application logic.
+- **ViewModel:** It exposes those data streams which are relevant to the View. Moreover, it servers as a link between the Model and the View.
 
 ### Features:
 - Using ViewModel fuctions directly in view: ```viewModel.fetchData()```
@@ -27,9 +29,9 @@ This repository demonstrates several mobile architecture patterns implemented in
 ![MVI](https://github.com/user-attachments/assets/27155167-d5f0-471b-849d-2529bc5e8007)
 
 ### MVI
-- **Model** represents the state of the app.
-- **View** displays the state and sends user intents to the ViewModel.
-- **Intent** describes actions that the user can take, which result in state changes.
+- **Model:** represents the state of the app.
+- **View:** displays the state and sends user intents to the ViewModel.
+- **Intent:** describes actions that the user can take, which result in state changes.
 
 ### Features:
 - Using intent to specify user action making it easy to track user interactions in ViewModel with when statement:
@@ -54,9 +56,9 @@ data class MainViewState(
 ![image](https://github.com/user-attachments/assets/6d362156-da6a-491e-8801-dd9560da6f41)
 
 ### MVC
-- **Model:** Holds the app's data, manages retrieval, storage, and business logic, with no knowledge of the UI.
-- **View:** Represents the UI, displaying data and capturing user interactions without handling complex logic.
-- **Controller:** Serves as the intermediary between the Model and View, handling user input, processing data, and updating the View manually.
+- **Model:** This component stores the application data. It has no knowledge about the interface. The model is responsible for handling the domain logic(real-world business rules) and communication with the database and network layers.
+- **View:** It is the UI(User Interface) layer that holds components that are visible on the screen. Moreover, it provides the visualization of the data stored in the Model and offers interaction to the user.
+- **Controller:** This component establishes the relationship between the View and the Model. It contains the core application logic and gets informed of the user’s response and updates the Model as per the need.
   
 ### Features:
 - Jetpack Compose is not well-suited for this pattern due to its declarative nature, which blurs the boundaries between view and logic.
@@ -71,7 +73,36 @@ private fun updateUI(weather: Weather) {
 
 
 ## MVP (Model-View-Presenter)
-*In progress*
+
+![image](https://github.com/user-attachments/assets/3aba4757-2324-4e9d-9099-6ea4e9cd93de)
+
+### MVP
+- **Model:** Layer for storing data. It is responsible for handling the domain logic(real-world business rules) and communication with the database and network layers.
+- **View:** UI(User Interface) layer. It provides the visualization of the data and keep a track of the user’s action in order to notify the Presenter.
+- **Controller:** Fetch the data from the model and applies the UI logic to decide what to display. It manages the state of the View and takes actions according to the user’s input notification from the View.
+
+### Features:
+- Jetpack Compose is not well-suited for MVP because its declarative UI model inherently couples the UI state with the data layer, making the Presenter layer redundant.
+- To establish communication between View-Presenter and Presenter-Model, an interface is needed:
+```kotlin
+interface Contract {
+    interface View {
+        fun showProgress()
+        fun hideProgress()
+        fun setString(string: String?)
+    }
+    interface Model {
+        interface OnFinishedListener {
+            fun onFinished(string: String?)
+        }
+        fun getNextCourse(onFinishedListener: OnFinishedListener?)
+    }
+    interface Presenter {
+        fun onButtonClick()
+        fun onDestroy()
+    }
+}
+```
 
 ## Installation
 
