@@ -79,10 +79,12 @@ private fun updateUI(weather: Weather) {
 ### MVP
 - **Model:** Layer for storing data. It is responsible for handling the domain logic(real-world business rules) and communication with the database and network layers.
 - **View:** UI(User Interface) layer. It provides the visualization of the data and keep a track of the user’s action in order to notify the Presenter.
-- **Controller:** Fetch the data from the model and applies the UI logic to decide what to display. It manages the state of the View and takes actions according to the user’s input notification from the View.
+- **Presenter:** Fetch the data from the model and applies the UI logic to decide what to display. It manages the state of the View and takes actions according to the user’s input notification from the View.
 
 ### Features:
 - Jetpack Compose is not well-suited for MVP because its declarative UI model inherently couples the UI state with the data layer, making the Presenter layer redundant.
+- MVP views should be easy to replace with alternative implementations.
+- MVP views should be reusable (can't be tightly coupled to the presenter) without its presenter
 - To establish communication between View-Presenter and Presenter-Model, an interface is needed:
 ```kotlin
 interface Contract {
